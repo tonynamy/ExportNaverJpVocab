@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, TypedDict, cast
 
 from naver_session import NaverSession
@@ -67,9 +67,12 @@ class NaverVocab:
         else:
             link = f"https://learn.dict.naver.com/gateway-api/{book.book_type}/mywordbook/word/list/search?wbId={book_id}&qt=0&st=0&cursor={cursor}&page_size={SEARCH_SIZE}&domain=naver"
 
-        vocabs_text = naver_session.session.get(link)
+        vocabs_text = naver_session.session.get(link).text
 
-        return cast(NaverVocabListResponse, json.loads(vocabs_text.text))
+        if not vocabs_text:
+            return None
+
+        return cast(NaverVocabListResponse, json.loads(vocabs_text))
 
     @staticmethod
     def get_vocabs(naver_session: NaverSession, book: "NaverVocabBook"):
@@ -77,16 +80,21 @@ class NaverVocab:
         words: list[NaverVocab] = []
 
         while (
-            response := NaverVocab.get_words_response(
-                naver_session, book=book, cursor=cursor
+            (
+                response := NaverVocab.get_words_response(
+                    naver_session, book=book, cursor=cursor
+                )
             )
-        )["data"]["over_last_page"] is False:
+            and response["data"]
+            and response["data"]["over_last_page"] is False
+        ):
             words += [
                 NaverVocab(
                     id=item["id"],
                     **get_entry_dict(book.book_type, json.loads(item["content"])),
                 )
                 for item in response["data"]["m_items"]
+                if item["content"]
             ]
 
             cursor = response["data"]["next_cursor"]
