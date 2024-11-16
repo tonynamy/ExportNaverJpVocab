@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
 import enum
 import json
+from dataclasses import dataclass, field
 from typing import cast
+
 from naver_session import NaverSession
 from naver_vocab import NaverVocab
 

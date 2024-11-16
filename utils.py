@@ -1,7 +1,5 @@
 import enum
-
 import re
-
 
 # as per recommendation from @freylis, compile once only
 RE_HTML = re.compile(r"<.*?>")
@@ -9,11 +7,11 @@ RE_PARENTHESIS = re.compile(r"\((?:[^)(]|\([^)(]*\))*\)")
 RE_BRACKET = re.compile(r"\[(?:[^\]\[]|\[[^\]\[]*\])*\]")
 RE_PARENTHESIS_HANGUL = re.compile(r"\(([ㄱ-ㅎ가-힣ㅏ-ㅣ\s]+)\)")
 RE_HANGUL = re.compile(r"[가-힣]+")
-RE_KANJI = re.compile("[\u4E00-\u9FFF\s]+")
-RE_HIRA = re.compile("[\u3040-\u309Fー\s]+")
-RE_KATA = re.compile("[\u30A0-\u30FF\s]+")
-RE_JAPANESE = re.compile("[\u3040-\u30FF\u30A0-\u30FFー\s]+")
-RE_HIRA_KATA = re.compile("[\u3040-\u30FFー\s]+")
+RE_KANJI = re.compile("[\u4e00-\u9fff\s]+")
+RE_HIRA = re.compile("[\u3040-\u309fー\s]+")
+RE_KATA = re.compile("[\u30a0-\u30ff\s]+")
+RE_JAPANESE = re.compile("[\u3040-\u30ff\u30a0-\u30ffー\s]+")
+RE_HIRA_KATA = re.compile("[\u3040-\u30ffー\s]+")
 
 
 class RegexPattern(enum.Enum):
