@@ -10,6 +10,6 @@
 
 https://github.com/tonynamy/ExportNaverVocab/assets/36332025/4d7b7f93-40f0-4e6e-a080-fbce675e7a45
 
-1. `pipenv install --python 3.11.0`
-2. `pipenv run python main.py`
+1. `poetry install`
+2. `poetry run python main.py`
 3. Follow the instructions
