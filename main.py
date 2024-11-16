@@ -29,7 +29,9 @@ def inquire_quit():
 
 
 def inquire_is_download_pron_files():
-    return inquire_bool("발음 파일을 다운로드하시겠습니까? (CSV의 세번째 열에 저장된 파일의 경로가 추가됩니다(ANKI에서 사용))")
+    return inquire_bool(
+        "발음 파일을 다운로드하시겠습니까? (CSV의 세번째 열에 저장된 파일의 경로가 추가됩니다(ANKI에서 사용))"
+    )
 
 
 def inquire_path(message: str, is_directory: bool = False) -> Path:
