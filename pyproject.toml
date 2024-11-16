@@ -1,0 +1,91 @@
+[tool.poetry]
+name = "export-naver-vocab"
+version = "0.1.0"
+description = ""
+authors = ["tonynamy <me@tonynamy.dev>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+async-generator = "==1.10"
+attrs = "==21.4.0"
+certifi = "==2021.10.8"
+cffi = "==1.15.0"
+charset-normalizer = "==2.0.11"
+cryptography = "==36.0.1"
+h11 = "==0.13.0"
+idna = "==3.3"
+outcome = "==1.1.0"
+pycparser = "==2.21"
+pyopenssl = "==22.0.0"
+requests = "==2.27.1"
+selenium = "==4.1.0"
+sniffio = "==1.2.0"
+sortedcontainers = "==2.4.0"
+trio = "==0.19.0"
+trio-websocket = "==0.9.2"
+urllib3 = "==1.26.8"
+wsproto = "==1.0.0"
+chromedriver-autoinstaller = "*"
+chromedriver-autoinstaller-fix = "*"
+inquirer = "*"
+tqdm = "*"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "==0.6.5"
+ipython = "==8.26.0"
+pre-commit = "==3.8.0"
+
+[tool.ruff]
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "__pycache__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "site-packages",
+  "venv",
+]
+line-length = 88
+indent-width = 4
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+extend-select = ["I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
