@@ -30,8 +30,12 @@ def inquire_quit():
 
 def inquire_is_download_pron_files():
     return inquire_bool(
-        "발음 파일을 다운로드하시겠습니까? (CSV의 세번째 열에 저장된 파일의 경로가 추가됩니다(ANKI에서 사용))"
+        "발음 파일을 다운로드하시겠습니까? (CSV에 저장된 파일의 경로가 추가됩니다(ANKI에서 사용))"
     )
+
+
+def inquire_examples():
+    return inquire_bool("예문을 추가 하시겠습니까? (CSV에 예문이 추가됩니다)")
 
 
 def inquire_path(message: str, is_directory: bool = False) -> Path:
@@ -188,6 +192,12 @@ def main():
             for file_tuple in file_tuples:
                 extra_columns[file_tuple.vocab_id] += (
                     f"[sound:{file_tuple.path.name}]",
+                )
+
+        if inquire_examples():
+            for vocab in vocabs:
+                extra_columns[vocab.id] += (
+                    vocab.examples[0] if vocab.examples else "",
                 )
 
         with open(csv_file_path, "w", encoding="utf8") as f:

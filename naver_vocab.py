@@ -39,6 +39,7 @@ class NaverVocab:
     pron: str
     pron_file: str | None
     remarks: str | None = None
+    examples: list[str] | None = None
 
     def get_pron_file_name(self):
         return self.pron_file.split("/")[-1] if self.pron_file else None

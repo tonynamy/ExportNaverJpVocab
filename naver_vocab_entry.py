@@ -29,6 +29,11 @@ class NaverVocabEntryResponseMember(TypedDict):
     prons: list[NaverVocabEntryResponseMemberPron]
 
 
+class NaverVocabEntryResponseEntryMeanExampleItem(TypedDict):
+    origin_example: str
+    show_example: str
+
+
 class NaverVocabEntryResponseEntryMean(TypedDict):
     mean_id: str
     part_id: str
@@ -36,6 +41,7 @@ class NaverVocabEntryResponseEntryMean(TypedDict):
     part_name: str
     mean_type: str
     show_mean: str
+    examples: list[NaverVocabEntryResponseEntryMeanExampleItem]
 
 
 class NaverVocabEntryResponseEntry:
@@ -146,12 +152,22 @@ def get_valid_mean(means: list[NaverVocabEntryResponseEntryMean]):
     return next(mean for mean in means if mean["show_mean"] != "")
 
 
+def get_valid_examples_for_mean(mean: NaverVocabEntryResponseEntryMean):
+    examples = [
+        example.get("origin_example", example.get("show_example"))
+        for example in mean["examples"]
+    ]
+    examples = [item for item in examples if item]
+    return examples
+
+
 class NaverVocabEntryDict(TypedDict):
     word: str
     meaning: str
     pron: str
     pron_file: str | None
     remarks: str | None
+    examples: list[str]
 
 
 def get_entry_dict(
@@ -159,6 +175,7 @@ def get_entry_dict(
 ):
     member = entry_dict["entry"]["members"][0]
     mean = get_valid_mean(entry_dict["entry"]["means"])
+    examples = get_valid_examples_for_mean(mean)
 
     return NaverVocabEntryDict(
         word=get_word(book_type, member),
@@ -166,4 +183,5 @@ def get_entry_dict(
         pron=get_pron(book_type, member),
         pron_file=get_pron_file(book_type, member),
         remarks=None,
+        examples=examples,
     )
