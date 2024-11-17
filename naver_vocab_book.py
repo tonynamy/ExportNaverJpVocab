@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import cast
 
 from naver_session import NaverSession
-from naver_vocab import NaverVocab
+from naver_vocab import NaverVocab, get_vocabs
 
 
 class NaverVocabBookResponse:
@@ -70,5 +70,5 @@ class NaverVocabBook:
         )
 
     def load_vocabs(self, naver_session: NaverSession):
-        self.vocabs = NaverVocab.get_vocabs(naver_session, self)
+        self.vocabs = get_vocabs(naver_session, self)
         return self

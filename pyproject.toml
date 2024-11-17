@@ -30,6 +30,7 @@ chromedriver-autoinstaller = "*"
 chromedriver-autoinstaller-fix = "*"
 inquirer = "*"
 tqdm = "*"
+pydantic = "^2.9.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "==0.6.5"

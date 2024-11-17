@@ -1,4 +1,6 @@
 import csv
+import enum
+import time
 from pathlib import Path
 from typing import NamedTuple
 
@@ -6,7 +8,7 @@ import inquirer
 from tqdm import tqdm
 
 from naver_session import NaverSession
-from naver_vocab import NaverVocab
+from naver_vocab import NaverVocab, get_dictionary_type, get_vocab_from_word
 from naver_vocab_book import NaverVocabBook
 
 
@@ -87,6 +89,26 @@ def inquire_book_type() -> NaverVocabBook.Type:
     return NaverVocabBook.Type(answers["book_type"])
 
 
+class VocabLocation(enum.Enum):
+    naver_vocab_book = enum.auto()
+    csv = enum.auto()
+
+
+def inquire_vocab_location() -> VocabLocation:
+    questions = [
+        inquirer.List(
+            "vocab_location",
+            message="단어를 불러올 방법을 선택하세요",
+            choices=[
+                ("네이버 단어장에서 불러오기", VocabLocation.naver_vocab_book),
+                ("CSV에서 불러오기 (첫 열)", VocabLocation.csv),
+            ],
+        ),
+    ]
+    answers = inquirer.prompt(questions)
+    return VocabLocation(answers["vocab_location"])
+
+
 def inquire_book_id(books: list[NaverVocabBook]) -> str:
     questions = [
         inquirer.List(
@@ -151,16 +173,41 @@ def main():
 
     while True:
         book_type = inquire_book_type()
+        vocab_location = inquire_vocab_location()
 
-        books = NaverVocabBook.get_book_list(session, book_type)
+        if vocab_location == VocabLocation.naver_vocab_book:
+            books = NaverVocabBook.get_book_list(session, book_type)
+            book_id = inquire_book_id(books)
+            selected_book = NaverVocabBook.get_book_from_id(session, book_id, book_type)
+            selected_book.load_vocabs(session)
+            vocabs = selected_book.vocabs
 
-        book_id = inquire_book_id(books)
+        elif vocab_location == VocabLocation.csv:
+            input_csv_file_location = inquire_csv_file_path()
 
-        selected_book = NaverVocabBook.get_book_from_id(session, book_id, book_type)
-        selected_book.load_vocabs(session)
+            with open(input_csv_file_location, mode="r", encoding="utf-8") as file:
+                words = [row[0].strip() for row in csv.reader(file) if row[0]]
 
-        vocabs = selected_book.vocabs
-        assert vocabs
+            vocabs = []
+
+            for word in tqdm(words, desc="네이버 단어장에서 단어 가져오는 중"):
+                try:
+                    vocab = get_vocab_from_word(
+                        session, get_dictionary_type(book_type), word
+                    )
+
+                    if vocab:
+                        vocabs.append(vocab)
+
+                except Exception:
+                    with open("log.txt", "a+") as log_file:
+                        log_file.write(f"{word}\n")
+                    pass
+
+                time.sleep(0.3)
+
+        else:
+            raise NotImplementedError
 
         csv_file_path = inquire_csv_file_path()
         extra_columns: dict[str, tuple[str, ...]] = {
